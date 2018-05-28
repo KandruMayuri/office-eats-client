@@ -12,7 +12,7 @@ export class EventsService {
   }
 
   private createEventUrl =  baseURLNew + 'events/create';
-  private getEventsUrl = baseURLNew + 'Events/ViewEvents';
+  private getEventsUrl = baseURLNew + 'events/index/';
   private deleteEventUrl = baseURLNew + 'Events/DeleteEvents';
 
   createEvent(event: Event) {
@@ -28,8 +28,9 @@ export class EventsService {
 
   getEvents() {
     return this.httpClient
-      .get<EventListResponse>(
-        this.getEventsUrl
+      .post<EventListResponse>(
+        this.getEventsUrl + '10/1',
+        {}
       )
       .map(res => {
         return res;

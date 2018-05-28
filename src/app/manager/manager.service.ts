@@ -7,7 +7,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Manager, ManagerDetails } from '../manager/models/manager';
 import { GetRestaurantsResponse } from '../manager/models/restaurant';
-import { baseURL } from '../shared/constants/base-url';
+import { baseURL, baseURLNew } from '../shared/constants/base-url';
 import { UserService } from '../shared/services/user.service';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class ManagerService {
   }
 
   private getManagerDetailsUrl = baseURL + 'Users/detail/';
-  private getManagerCorporateResturantsUrl = baseURL + 'CreateEvents/restaurants_info';
+  private getManagerCorporateResturantsUrl = baseURLNew + 'Corporates/restaurantview/';
 
   set manager(manager: ManagerDetails) {
     this.managerDetails = manager;
@@ -41,16 +41,11 @@ export class ManagerService {
   }
 
   getManagerCorporateResturants() {
-    let headers = new HttpHeaders();
-    headers = headers
-      .set('Corporate-ID', this.manager.corporate_id.toString());
 
     return this.httpClient
-      .get <GetRestaurantsResponse>(
-        this.getManagerCorporateResturantsUrl,
-        {
-          headers: headers
-        },
+      .post <GetRestaurantsResponse>(
+        this.getManagerCorporateResturantsUrl + this.manager.corporate_id,
+        {}
       )
       .map(res => {
         return res;

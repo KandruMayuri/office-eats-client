@@ -22,7 +22,7 @@
         <div class="form-group" [ngClass]="displayFieldCss('eventTitle')">
           <label class="col-md-3 control-label" for="eventTitle">Meeting Title*</label>
           <div class="col-md-5">
-            <input id="eventTitle" name="eventTitle" type="text" placeholder="Meeting Title" class="form-control" formControlName='meetingTitle'
+            <input id="eventTitle" name="eventTitle" type="text" placeholder="Meeting Title" class="form-control" formControlName='eventTitle'
               maxlength="50">
             <span *ngIf="formGroup.get('eventTitle').invalid && formGroup.get('eventTitle').touched" class="help-block">
               <div *ngIf="formGroup.get('eventTitle').hasError('required')">Meeting Title is required</div>
@@ -55,14 +55,14 @@
           <label class="col-md-3 control-label" for="eventVenueLocation">Venue*</label>
           <div class="col-md-5">
             <input id="eventVenueLocation" name="eventVenueLocation"  type="text" placeholder="Venue" class="form-control" formControlName='eventVenueLocation' maxlength="50">
-            <span *ngIf="formGroup.get('eventVenueLocation').invalid && formGroup.get('venue').touched" class="help-block">
+            <span *ngIf="formGroup.get('eventVenueLocation').invalid && formGroup.get('eventVenueLocation').touched" class="help-block">
               <div *ngIf="formGroup.get('eventVenueLocation').hasError('required')">Venue is required</div>
               <div *ngIf="formGroup.get('eventVenueLocation').hasError('minlength')">Venue must be at least 3 characters</div>
             </span>
           </div>
         </div>
         
-        <div class="form-group" [ngClass]="displayFieldCss('orderType')">
+        <div class="form-group" [ngClass]="displayFieldCss('eventOrderType')">
           <label class="col-md-3 text-right" for="eventOrderType">Order Type*</label>
           <div class="col-md-5">
             <select class="form-control" formControlName="eventOrderType" name="eventOrderType" id="eventOrderType">
@@ -75,7 +75,7 @@
             </span>
           </div>
         </div>
-        <div class="form-group" [ngClass]="displayFieldCss('attendeesCount')" *ngIf="orderType == 1">
+        <div class="form-group" [ngClass]="displayFieldCss('attendeesCount')" *ngIf="eventOrderType == 1">
           <label class="col-md-3 control-label" for="attendeesCount">Attendees Count*</label>
           <div class="col-md-5">
             <input id="attendeesCount" name="attendeesCount"  type="text" placeholder="Attendees Count" class="form-control" formControlName='attendeesCount'>
@@ -84,7 +84,7 @@
             </span>
           </div>
         </div>
-        <div class="form-group" [ngClass]="displayFieldCss('eventBudget')" *ngIf="orderType == 0">
+        <div class="form-group" [ngClass]="displayFieldCss('eventBudget')" *ngIf="eventOrderType == 0">
           <label class="col-md-3 control-label" for="eventBudget">Budget*</label>
           <div class="col-md-5">
             <input id="eventBudget" name="eventBudget" currencyMask (blur)="onChangeBudget()" [options]="{align: 'left'}" type="text" placeholder="Budget" class="form-control" formControlName='eventBudget'>
@@ -93,16 +93,16 @@
             </span>
           </div>
         </div>
-        <div class="form-group" *ngIf="orderType == 0">
+        <div class="form-group" *ngIf="eventOrderType == 0">
           <label class="col-md-3 text-right" for="eventSplitEven">Split Even</label>
           <div class="col-md-5">
             <p-checkbox name="eventSplitEven" (onChange)="onChangeBudget()" formControlName='eventSplitEven' binary="true"></p-checkbox>
           </div>
         </div>
-        <div class="form-group" [ngClass]="displayFieldCss('eventUsers')" *ngIf="orderType == 0">
+        <div class="form-group" [ngClass]="displayFieldCss('eventUsers')" *ngIf="eventOrderType == 0">
           <label class="col-md-3 control-label" for="eventUsers">Attendees</label>
           <div class="col-md-5">
-            <textarea rows="5" class="form-control" formControlName='attendeesList'></textarea>
+            <textarea rows="5" class="form-control" formControlName='eventUsers'></textarea>
             <small>Ex: sample@company.com; sample1@company.com</small>
             <span *ngIf="formGroup.get('eventUsers').invalid && formGroup.get('eventUsers').touched" class="help-block">
               <div *ngIf="formGroup.get('eventUsers').hasError('required')">Attendees is required</div>
@@ -112,7 +112,7 @@
           </div>
         </div>
       </div>
-      <div class="table-responsive" *ngIf="orderType == 0">
+      <div class="table-responsive" *ngIf="eventOrderType == 0">
         <table class="table align-middle table-bordered">
           <thead>
             <tr>
@@ -133,7 +133,7 @@
               </td>
               <td>
                 <div class="form-group mb-0" [ngClass]="displayDynamicFieldCss('eventUserEmail', i)">
-                  <input type="eventUserEmail" class="form-control" placeholder="Email" formControlName='email'>
+                  <input type="eventUserEmail" class="form-control" placeholder="Email" formControlName='eventUserEmail'>
                   <span *ngIf="formGroup.get('users').get(i.toString()).get('eventUserEmail').invalid && formGroup.get('users').get(i.toString()).get('eventUserEmail').touched"
                     class="help-block">
                     <div *ngIf="formGroup.get('users').get(i.toString()).get('eventUserEmail').hasError('required')">Email is required</div>
@@ -143,7 +143,7 @@
               </td>
               <td>
                 <div class="form-group mb-0" [ngClass]="displayDynamicFieldCss('eventUserName', i)">
-                  <input type="text" class="form-control" placeholder="Name" formControlName='name'>
+                  <input type="text" class="form-control" placeholder="Name" formControlName='eventUserName'>
                   <span *ngIf="formGroup.get('users').get(i.toString()).get('eventUserName').invalid && formGroup.get('users').get(i.toString()).get('eventUserName').touched"
                     class="help-block">
                     <div *ngIf="formGroup.get('users').get(i.toString()).get('eventUserName').hasError('required')">Name is required</div>
@@ -152,7 +152,7 @@
               </td>
               <td>
                 <div class="form-group mb-0" [ngClass]="displayDynamicFieldCss('eventUserFoodPreference', i)">
-                  <input type="text" class="form-control" placeholder="Food Preference" formControlName='foodPreference'>
+                  <input type="text" class="form-control" placeholder="Food Preference" formControlName='eventUserFoodPreference'>
                   <span *ngIf="formGroup.get('users').get(i.toString()).get('eventUserFoodPreference').invalid && formGroup.get('users').get(i.toString()).get('eventUserFoodPreference').touched"
                     class="help-block">
                     <div *ngIf="formGroup.get('users').get(i.toString()).get('eventUserFoodPreference').hasError('required')">Food Preference is required</div>
@@ -174,7 +174,7 @@
                 <button class="btn btn-danger" type="button" (click)="removeAttendee(i)">Delete</button>
               </td>
             </tr>
-            <tr *ngIf="!formGroup.value.attendees.length">
+            <tr *ngIf="!formGroup.value.users.length">
               <td colspan="8">No attendees to show.</td>
             </tr>
           </tbody>

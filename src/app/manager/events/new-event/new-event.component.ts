@@ -84,9 +84,7 @@ export class NewEventComponent implements OnInit {
     });
 
     this.managerService.getManagerCorporateResturants().subscribe(data => {
-      if (data.status === 200) {
-        this.restaurants = data.restaurants_details;
-      }
+      console.log(data);
     });
 
     this.formGroup.get('eventOrderType').valueChanges.subscribe(value => {
@@ -109,20 +107,9 @@ export class NewEventComponent implements OnInit {
     const attendeesCount = this.formGroup.get('attendeesCount');
     if (eventOrderType === 0) {
       this.eventOrderType = 0;
-      budget.setValidators(Validators.required);
-      eventUsers.setValidators(Validators.required);
-      users.setValidators(Validators.required);
-      attendeesCount.clearValidators();
     } else {
       this.eventOrderType = 1;
-      budget.clearValidators();
-      eventUsers.clearValidators();
-      users.controls.forEach(c => c.clearValidators());
-      attendeesCount.setValidators(Validators.required);
     }
-    budget.updateValueAndValidity();
-    eventUsers.updateValueAndValidity();
-    attendeesCount.updateValueAndValidity();
   }
 
   onChangeBudget() {
@@ -146,7 +133,7 @@ export class NewEventComponent implements OnInit {
     let budget = 0;
       if (this.users.controls && this.users.controls.length) {
         this.users.controls.forEach((attendee) => {
-          budget = budget + attendee.get('budget').value;
+          budget = budget + attendee.get('eventUserBudget').value;
         });
         this.formGroup.patchValue({
           budget: budget
@@ -163,65 +150,65 @@ export class NewEventComponent implements OnInit {
     });
   }
 
-  addAttendee() {
-    if (this.formGroup.value.attendeesList) {
-      const attendees = this.formGroup.value.attendeesList.split(';');
-      if (attendees && attendees.length) {
-        for (let i = 0; i < attendees.length; i++) {
-          const email = attendees[i].trim();
-          if (email && email.length) {
-            if (this.formGroup.value.attendees.length) {
-              const isEmailExists = this.formGroup.get('attendees').value.some(attende => {
-                return attende.email === email;
-              });
-              if (!isEmailExists) {
-                (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
-                this.onChangeBudget();
-              }
-            } else {
-              (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
-              this.onChangeBudget();
-            }
-          }
-        }
-      }
-    }
-  }
+  // addAttendee() {
+  //   if (this.formGroup.value.eventUsers) {
+  //     const attendees = this.formGroup.value.eventUsers.split(';');
+  //     if (attendees && attendees.length) {
+  //       for (let i = 0; i < attendees.length; i++) {
+  //         const email = attendees[i].trim();
+  //         if (email && email.length) {
+  //           if (this.formGroup.value.attendees.length) {
+  //             const isEmailExists = this.formGroup.get('attendees').value.some(attende => {
+  //               return attende.email === email;
+  //             });
+  //             if (!isEmailExists) {
+  //               (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
+  //               this.onChangeBudget();
+  //             }
+  //           } else {
+  //             (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
+  //             this.onChangeBudget();
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
-  removeAttendee (index: number) {
-    const control = <FormArray>this.formGroup.controls['attendees'];
-    // remove the chosen row
-    control.removeAt(index);
-    this.onChangeBudget();
-  }
+  // removeAttendee (index: number) {
+  //   const control = <FormArray>this.formGroup.controls['attendees'];
+  //   // remove the chosen row
+  //   control.removeAt(index);
+  //   this.onChangeBudget();
+  // }
 
-  onRestaurantSelect(restaurant: Restaurant) {
-    restaurant.checked = !restaurant.checked;
-    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
-    const index = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurant_id);
-    if (restaurant.checked) {
-      if (selectedRestaurantsFormArray.length >= 3)  {
-        selectedRestaurantsFormArray.removeAt(0);
-        this.selectedRestaurants.splice(0, 1);
-        this.restaurants[0].checked = false;
-      }
-      selectedRestaurantsFormArray.push(new FormControl(restaurant.restaurant_id));
-      this.selectedRestaurants.push(restaurant);
-    } else {
-      selectedRestaurantsFormArray.removeAt(index);
-      this.selectedRestaurants.splice(index, 1);
-      restaurant.checked = false;
-    }
-  }
+  // onRestaurantSelect(restaurant: Restaurant) {
+  //   restaurant.checked = !restaurant.checked;
+  //   const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
+  //   const index = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
+  //   if (restaurant.checked) {
+  //     if (selectedRestaurantsFormArray.length >= 3)  {
+  //       selectedRestaurantsFormArray.removeAt(0);
+  //       this.selectedRestaurants.splice(0, 1);
+  //       this.restaurants[0].checked = false;
+  //     }
+  //     selectedRestaurantsFormArray.push(new FormControl(restaurant.restaurantId));
+  //     this.selectedRestaurants.push(restaurant);
+  //   } else {
+  //     selectedRestaurantsFormArray.removeAt(index);
+  //     this.selectedRestaurants.splice(index, 1);
+  //     restaurant.checked = false;
+  //   }
+  // }
 
-  removeSelectedRestaurant(restaurant: Restaurant, index: number) {
-    this.selectedRestaurants.splice(index, 1);
-    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
-    const i = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurant_id);
-    const i1 = this.restaurants.findIndex(x => x.restaurant_id === restaurant.restaurant_id);
-    this.restaurants[i1].checked = false;
-    selectedRestaurantsFormArray.removeAt(i);
-  }
+  // removeSelectedRestaurant(restaurant: Restaurant, index: number) {
+  //   this.selectedRestaurants.splice(index, 1);
+  //   const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
+  //   const i = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
+  //   const i1 = this.restaurants.findIndex(x => x.restaurantId === restaurant.restaurantId);
+  //   this.restaurants[i1].checked = false;
+  //   selectedRestaurantsFormArray.removeAt(i);
+  // }
 
   createEvent() {
       this.eventsService.createEvent(this.formGroup.value)
