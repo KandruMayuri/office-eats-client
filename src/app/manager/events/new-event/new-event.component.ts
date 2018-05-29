@@ -71,20 +71,20 @@ export class NewEventComponent implements OnInit {
         Validators.minLength(3),
         Validators.maxLength(50)
       ]),
-      eventBudget: new FormControl('', [
-        Validators.required
-      ]),
-      eventSplitEven: new FormControl(false),
       eventOrderType: new FormControl('', [Validators.required]),
-      attendeesCount: new FormControl('', [
-        Validators.required,
-      ]),
-      eventUsers: new FormControl(this.managerEmail, [Validators.required]),
+      eventBudget: new FormControl(''),
+      eventSplitEven: new FormControl(false),
+      eventUsersCount: new FormControl(''),
+      eventUsers: new FormControl(this.managerEmail),
       users: new FormArray([this.createAttende(this.managerEmail)]),
+      eventRestaurantIds: new FormArray([], Validators.required),
+      restaurantMenuId: new FormControl('1')
     });
 
     this.managerService.getManagerCorporateResturants().subscribe(data => {
-      console.log(data);
+      if (data.obj_response.status === 201) {
+        this.restaurants = data.result;
+      }
     });
 
     this.formGroup.get('eventOrderType').valueChanges.subscribe(value => {
@@ -103,13 +103,30 @@ export class NewEventComponent implements OnInit {
   setOrderype(eventOrderType: number) {
     const budget = this.formGroup.get('eventBudget');
     const eventUsers = this.formGroup.get('eventUsers');
-    const users = this.users;
-    const attendeesCount = this.formGroup.get('attendeesCount');
-    if (eventOrderType === 0) {
+    const eventUsersCount = this.formGroup.get('eventUsersCount');
+    if (eventOrderType === 0) { // Individual order
       this.eventOrderType = 0;
+      budget.setValidators(Validators.required);
+      eventUsers.setValidators(Validators.required);
+      // clear validators
+      eventUsersCount.clearValidators();
+      this.addAttendee();
+
     } else {
       this.eventOrderType = 1;
+      eventUsersCount.setValidators(Validators.required);
+
+      budget.clearValidators();
+      eventUsers.clearValidators();
+      const control = <FormArray>this.formGroup.controls['users'];
+        for (let i = 0; i < control.length; i++) {
+            control.removeAt(i);
+        }
     }
+
+    budget.updateValueAndValidity();
+    eventUsers.updateValueAndValidity();
+    eventUsersCount.updateValueAndValidity();
   }
 
   onChangeBudget() {
@@ -136,7 +153,7 @@ export class NewEventComponent implements OnInit {
           budget = budget + attendee.get('eventUserBudget').value;
         });
         this.formGroup.patchValue({
-          budget: budget
+          eventBudget: budget
         });
       }
   }
@@ -150,71 +167,70 @@ export class NewEventComponent implements OnInit {
     });
   }
 
-  // addAttendee() {
-  //   if (this.formGroup.value.eventUsers) {
-  //     const attendees = this.formGroup.value.eventUsers.split(';');
-  //     if (attendees && attendees.length) {
-  //       for (let i = 0; i < attendees.length; i++) {
-  //         const email = attendees[i].trim();
-  //         if (email && email.length) {
-  //           if (this.formGroup.value.attendees.length) {
-  //             const isEmailExists = this.formGroup.get('attendees').value.some(attende => {
-  //               return attende.email === email;
-  //             });
-  //             if (!isEmailExists) {
-  //               (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
-  //               this.onChangeBudget();
-  //             }
-  //           } else {
-  //             (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
-  //             this.onChangeBudget();
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  addAttendee() {
+    if (this.formGroup.value.eventUsers) {
+      const attendees = this.formGroup.value.eventUsers.split(';');
+      if (attendees && attendees.length) {
+        for (let i = 0; i < attendees.length; i++) {
+          const email = attendees[i].trim();
+          if (email && email.length) {
+            if (this.formGroup.value.users.length) {
+              const isEmailExists = this.formGroup.get('users').value.some(attende => {
+                return attende.eventUserEmail === email;
+              });
+              if (!isEmailExists) {
+                (<FormArray>this.formGroup.get('users')).push(this.createAttende(email));
+                this.onChangeBudget();
+              }
+            } else {
+              (<FormArray>this.formGroup.get('users')).push(this.createAttende(email));
+              this.onChangeBudget();
+            }
+          }
+        }
+      }
+    }
+  }
 
-  // removeAttendee (index: number) {
-  //   const control = <FormArray>this.formGroup.controls['attendees'];
-  //   // remove the chosen row
-  //   control.removeAt(index);
-  //   this.onChangeBudget();
-  // }
+  removeAttendee (index: number) {
+    const control = <FormArray>this.formGroup.controls['users'];
+    control.removeAt(index);
+    this.onChangeBudget();
+  }
 
-  // onRestaurantSelect(restaurant: Restaurant) {
-  //   restaurant.checked = !restaurant.checked;
-  //   const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
-  //   const index = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
-  //   if (restaurant.checked) {
-  //     if (selectedRestaurantsFormArray.length >= 3)  {
-  //       selectedRestaurantsFormArray.removeAt(0);
-  //       this.selectedRestaurants.splice(0, 1);
-  //       this.restaurants[0].checked = false;
-  //     }
-  //     selectedRestaurantsFormArray.push(new FormControl(restaurant.restaurantId));
-  //     this.selectedRestaurants.push(restaurant);
-  //   } else {
-  //     selectedRestaurantsFormArray.removeAt(index);
-  //     this.selectedRestaurants.splice(index, 1);
-  //     restaurant.checked = false;
-  //   }
-  // }
+  onRestaurantSelect(restaurant: Restaurant) {
+    restaurant.checked = !restaurant.checked;
+    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.eventRestaurantIds;
+    const index = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
+    if (restaurant.checked) {
+      if (selectedRestaurantsFormArray.length >= 3)  {
+        selectedRestaurantsFormArray.removeAt(0);
+        this.selectedRestaurants.splice(0, 1);
+        this.restaurants[0].checked = false;
+      }
+      selectedRestaurantsFormArray.push(new FormControl(restaurant.restaurantId));
+      this.selectedRestaurants.push(restaurant);
+    } else {
+      selectedRestaurantsFormArray.removeAt(index);
+      this.selectedRestaurants.splice(index, 1);
+      restaurant.checked = false;
+    }
+  }
 
-  // removeSelectedRestaurant(restaurant: Restaurant, index: number) {
-  //   this.selectedRestaurants.splice(index, 1);
-  //   const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
-  //   const i = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
-  //   const i1 = this.restaurants.findIndex(x => x.restaurantId === restaurant.restaurantId);
-  //   this.restaurants[i1].checked = false;
-  //   selectedRestaurantsFormArray.removeAt(i);
-  // }
+  removeSelectedRestaurant(restaurant: Restaurant, index: number) {
+    this.selectedRestaurants.splice(index, 1);
+    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.eventRestaurantIds;
+    const i = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
+    const i1 = this.restaurants.findIndex(x => x.restaurantId === restaurant.restaurantId);
+    this.restaurants[i1].checked = false;
+    selectedRestaurantsFormArray.removeAt(i);
+  }
 
   createEvent() {
       this.eventsService.createEvent(this.formGroup.value)
       .subscribe(data => {
-        if (data.status === 201) {
-          this.toastr.success(data.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
+        if (data.obj_response.status === 201) {
+          this.toastr.success(data.obj_response.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
           this.router.navigate(['/manager/events']);
         }
       }

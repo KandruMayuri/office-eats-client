@@ -33,7 +33,7 @@
         <div class="form-group" [ngClass]="displayFieldCss('eventDate')">
           <label class="col-md-3 control-label" for="eventDate">Date*</label>
           <div class="col-md-5">
-            <p-calendar formControlName="eventDate" placeholder="eventDate" [minDate]="minDateValue" styleClass="w-100-p" inputStyleClass="w-100-p"
+            <p-calendar formControlName="eventDate" placeholder="Date" [minDate]="minDateValue" styleClass="w-100-p" inputStyleClass="w-100-p"
               [readonlyInput]="true"></p-calendar>
             <span *ngIf="formGroup.get('eventDate').invalid && formGroup.get('eventDate').touched" class="help-block">
               <div *ngIf="formGroup.get('eventDate').hasError('required')">Date is required</div>
@@ -61,7 +61,7 @@
             </span>
           </div>
         </div>
-        
+
         <div class="form-group" [ngClass]="displayFieldCss('eventOrderType')">
           <label class="col-md-3 text-right" for="eventOrderType">Order Type*</label>
           <div class="col-md-5">
@@ -75,12 +75,12 @@
             </span>
           </div>
         </div>
-        <div class="form-group" [ngClass]="displayFieldCss('attendeesCount')" *ngIf="eventOrderType == 1">
-          <label class="col-md-3 control-label" for="attendeesCount">Attendees Count*</label>
+        <div class="form-group" [ngClass]="displayFieldCss('eventUsersCount')" *ngIf="eventOrderType == 1">
+          <label class="col-md-3 control-label" for="eventUsersCount">Attendees Count*</label>
           <div class="col-md-5">
-            <input id="attendeesCount" name="attendeesCount"  type="text" placeholder="Attendees Count" class="form-control" formControlName='attendeesCount'>
-            <span *ngIf="formGroup.get('attendeesCount').invalid && formGroup.get('attendeesCount').touched" class="help-block">
-              <div *ngIf="formGroup.get('attendeesCount').hasError('required')">Attendees count is required</div>
+            <input id="eventUsersCount" name="eventUsersCount"  type="text" placeholder="Attendees Count" class="form-control" formControlName='eventUsersCount'>
+            <span *ngIf="formGroup.get('eventUsersCount').invalid && formGroup.get('eventUsersCount').touched" class="help-block">
+              <div *ngIf="formGroup.get('eventUsersCount').hasError('required')">Attendees count is required</div>
             </span>
           </div>
         </div>
@@ -189,7 +189,7 @@
           <div class="row">
             <div class="col-md-12 mb-15">
               <div class="chip" *ngFor="let restaurant of selectedRestaurants;  let i = index;">
-                <img src="https://res.cloudinary.com/grubhub/image/upload/w_264,h_178,f_auto,q_auto,dpr_auto,g_auto,c_fill,e_improve/jrustzqv7q05qkj9gdaa" alt="Person" width="96" height="96"> {{restaurant.restaurant_name}}
+                <img src="https://res.cloudinary.com/grubhub/image/upload/w_264,h_178,f_auto,q_auto,dpr_auto,g_auto,c_fill,e_improve/jrustzqv7q05qkj9gdaa" alt="Person" width="96" height="96"> {{restaurant.restaurantName}}
                 <span class="closebtn" (click)="removeSelectedRestaurant(restaurant, i)">&times;</span>
               </div>
             </div>
@@ -199,13 +199,13 @@
               <div class="card">
                 <div class="image">
                   <img src="https://res.cloudinary.com/grubhub/image/upload/w_264,h_178,f_auto,q_auto,dpr_auto,g_auto,c_fill,e_improve/jrustzqv7q05qkj9gdaa"
-                    class="img-responsive w-100-p" alt="{{restaurant.restaurant_name}}">
+                    class="img-responsive w-100-p" alt="{{restaurant.restaurantEmail}}">
                   <div class="checkbox-fixed">
                     <input type="checkbox" [checked]="restaurant.checked" (change)="onRestaurantSelect(restaurant)">
                   </div>
                 </div>
                 <div class="card-body">
-                  <h5 class="mt-0">{{restaurant.restaurant_name}}</h5>
+                  <h5 class="mt-0">{{restaurant.restaurantName}}</h5>
                   <div class="rating">
                     <span class="fa fa-star text-orange"></span>
                     <span class="fa fa-star text-orange"></span>

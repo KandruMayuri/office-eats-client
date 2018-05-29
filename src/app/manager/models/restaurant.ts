@@ -2,6 +2,7 @@ import { CommonResponse } from '../../shared/models/user';
 
 export class Restaurant {
     restaurantId: number;
+    restaurantName: string;
     restaurantEmail: string;
     restaurantPhone1: number;
     restaurantTextPhoneNumber: number;

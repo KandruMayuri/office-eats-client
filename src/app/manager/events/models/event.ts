@@ -3,6 +3,7 @@ import { CommonResponse } from '../../../shared/models/user';
 export class Event {
     eventId: number;
     managerId: number;
+    eventTitle: string;
     managerEmail: string;
     eventDate: Date;
     eventTime: string;

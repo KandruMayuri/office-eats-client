@@ -13,6 +13,10 @@ export class CommonResponse {
   message: string;
 }
 
+export class ObjResponse {
+  obj_response: CommonResponse;
+}
+
 export class AuthorizeResposne {
   token: string;
   id: number;

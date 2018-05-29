@@ -5,7 +5,6 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { EventsService } from '../events.service';
 import { Event } from '../models/event';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-event-list',
@@ -33,7 +32,9 @@ export class EventListComponent implements OnInit {
 
   getEvents() {
     this.eventsService.getEvents().subscribe(data => {
-     console.log(data);
+      if (data.obj_response.status === 200) {
+        this.events = data.result;
+      }
     });
   }
 
@@ -46,9 +47,9 @@ export class EventListComponent implements OnInit {
       message: 'Are you sure that you want to delete this event?',
       accept: () => {
          this.eventsService.deleteEvent(event.eventId).subscribe(data => {
-          if (data.status === 200) {
+          if (data.obj_response.status === 201) {
             this.getEvents();
-            this.toastr.success(data.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
+            this.toastr.success(data.obj_response.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
           }
          });
       }
