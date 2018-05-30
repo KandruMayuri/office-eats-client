@@ -21,6 +21,7 @@ export class NewEventComponent implements OnInit {
   minDateValue: Date;
   public carouselTile: NgxCarousel;
   managerEmail: string;
+  eventOrderType: number;
 
   constructor(
     private router: Router,
@@ -54,36 +55,40 @@ export class NewEventComponent implements OnInit {
     eventTime.setHours(11, 30, 0, 0);
 
     this.formGroup = new FormGroup({
-      meetingTitle: new FormControl('', [
+      eventTitle: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50)
       ]),
-      date: new FormControl('', [
+      eventDate: new FormControl('', [
         Validators.required
       ]),
-      time: new FormControl(eventTime, [
+      eventTime: new FormControl(eventTime, [
         Validators.required
       ]),
-      venue: new FormControl('', [
+      eventVenueLocation: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(50)
       ]),
-      budget: new FormControl('', [
-        Validators.required
-      ]),
-      splitEven: new FormControl(false),
-      orderType: new FormControl('', [Validators.required]),
-      attendeesList: new FormControl(this.managerEmail, [Validators.required]),
-      attendees: new FormArray([this.createAttende(this.managerEmail)]),
-      selectedRestaurants: this.formBuilder.array([], Validators.required)
+      eventOrderType: new FormControl('', [Validators.required]),
+      eventBudget: new FormControl(''),
+      eventSplitEven: new FormControl(false),
+      eventUsersCount: new FormControl(''),
+      eventUsers: new FormControl(this.managerEmail),
+      users: new FormArray([this.createAttende(this.managerEmail)]),
+      eventRestaurantIds: new FormArray([], Validators.required),
+      restaurantMenuId: new FormControl('1')
     });
 
     this.managerService.getManagerCorporateResturants().subscribe(data => {
-      if (data.status === 200) {
-        this.restaurants = data.restaurants_details;
+      if (data.obj_response.status === 201) {
+        this.restaurants = data.result;
       }
+    });
+
+    this.formGroup.get('eventOrderType').valueChanges.subscribe(value => {
+      this.setOrderype(parseInt(value, 10));
     });
   }
 
@@ -91,22 +96,51 @@ export class NewEventComponent implements OnInit {
     history.back();
   }
 
-  get attendees() {
-      return this.formGroup.controls.attendees as FormArray;
+  get users() {
+      return this.formGroup.controls.users as FormArray;
+  }
+
+  setOrderype(eventOrderType: number) {
+    const budget = this.formGroup.get('eventBudget');
+    const eventUsers = this.formGroup.get('eventUsers');
+    const eventUsersCount = this.formGroup.get('eventUsersCount');
+    if (eventOrderType === 0) { // Individual order
+      this.eventOrderType = 0;
+      budget.setValidators(Validators.required);
+      eventUsers.setValidators(Validators.required);
+      // clear validators
+      eventUsersCount.clearValidators();
+      this.addAttendee();
+
+    } else {
+      this.eventOrderType = 1;
+      eventUsersCount.setValidators(Validators.required);
+
+      budget.clearValidators();
+      eventUsers.clearValidators();
+      const control = <FormArray>this.formGroup.controls['users'];
+        for (let i = 0; i < control.length; i++) {
+            control.removeAt(i);
+        }
+    }
+
+    budget.updateValueAndValidity();
+    eventUsers.updateValueAndValidity();
+    eventUsersCount.updateValueAndValidity();
   }
 
   onChangeBudget() {
-    if (this.attendees.controls && this.attendees.controls.length) {
-      if (this.formGroup.value.budget) {
-        const budgetForEachAttendee  = this.formGroup.value.budget / this.attendees.controls.length;
-        if (this.formGroup.value.splitEven) {
-          this.attendees.controls.forEach((attendee) => {
-            attendee.get('budget').setValue(budgetForEachAttendee);
+    if (this.users.controls && this.users.controls.length) {
+      if (this.formGroup.value.eventBudget) {
+        const budgetForEachAttendee  = this.formGroup.value.eventBudget / this.users.controls.length;
+        if (this.formGroup.value.eventSplitEven) {
+          this.users.controls.forEach((attendee) => {
+            attendee.get('eventUserBudget').setValue(budgetForEachAttendee);
           });
         }
       } else {
-        this.attendees.controls.forEach((attendee) => {
-          attendee.get('budget').setValue(0);
+        this.users.controls.forEach((attendee) => {
+          attendee.get('eventUserBudget').setValue(0);
         });
       }
     }
@@ -114,42 +148,42 @@ export class NewEventComponent implements OnInit {
 
   onAttendeeBudgetChange() {
     let budget = 0;
-      if (this.attendees.controls && this.attendees.controls.length) {
-        this.attendees.controls.forEach((attendee) => {
-          budget = budget + attendee.get('budget').value;
+      if (this.users.controls && this.users.controls.length) {
+        this.users.controls.forEach((attendee) => {
+          budget = budget + attendee.get('eventUserBudget').value;
         });
         this.formGroup.patchValue({
-          budget: budget
+          eventBudget: budget
         });
       }
   }
 
   createAttende(email): FormGroup {
     return this.formBuilder.group({
-      email: [email, [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
-      name: ['', Validators.required],
-      budget: [''],
-      foodPreference: ['', Validators.required]
+      eventUserEmail: [email, [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+      eventUserName: ['', Validators.required],
+      eventUserBudget: [''],
+      eventUserFoodPreference: ['', Validators.required]
     });
   }
 
   addAttendee() {
-    if (this.formGroup.value.attendeesList) {
-      const attendees = this.formGroup.value.attendeesList.split(';');
+    if (this.formGroup.value.eventUsers) {
+      const attendees = this.formGroup.value.eventUsers.split(';');
       if (attendees && attendees.length) {
         for (let i = 0; i < attendees.length; i++) {
           const email = attendees[i].trim();
           if (email && email.length) {
-            if (this.formGroup.value.attendees.length) {
-              const isEmailExists = this.formGroup.get('attendees').value.some(attende => {
-                return attende.email === email;
+            if (this.formGroup.value.users.length) {
+              const isEmailExists = this.formGroup.get('users').value.some(attende => {
+                return attende.eventUserEmail === email;
               });
               if (!isEmailExists) {
-                (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
+                (<FormArray>this.formGroup.get('users')).push(this.createAttende(email));
                 this.onChangeBudget();
               }
             } else {
-              (<FormArray>this.formGroup.get('attendees')).push(this.createAttende(email));
+              (<FormArray>this.formGroup.get('users')).push(this.createAttende(email));
               this.onChangeBudget();
             }
           }
@@ -159,23 +193,22 @@ export class NewEventComponent implements OnInit {
   }
 
   removeAttendee (index: number) {
-    const control = <FormArray>this.formGroup.controls['attendees'];
-    // remove the chosen row
+    const control = <FormArray>this.formGroup.controls['users'];
     control.removeAt(index);
     this.onChangeBudget();
   }
 
   onRestaurantSelect(restaurant: Restaurant) {
     restaurant.checked = !restaurant.checked;
-    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
-    const index = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurant_id);
+    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.eventRestaurantIds;
+    const index = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
     if (restaurant.checked) {
       if (selectedRestaurantsFormArray.length >= 3)  {
         selectedRestaurantsFormArray.removeAt(0);
         this.selectedRestaurants.splice(0, 1);
         this.restaurants[0].checked = false;
       }
-      selectedRestaurantsFormArray.push(new FormControl(restaurant.restaurant_id));
+      selectedRestaurantsFormArray.push(new FormControl(restaurant.restaurantId));
       this.selectedRestaurants.push(restaurant);
     } else {
       selectedRestaurantsFormArray.removeAt(index);
@@ -186,24 +219,22 @@ export class NewEventComponent implements OnInit {
 
   removeSelectedRestaurant(restaurant: Restaurant, index: number) {
     this.selectedRestaurants.splice(index, 1);
-    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.selectedRestaurants;
-    const i = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurant_id);
-    const i1 = this.restaurants.findIndex(x => x.restaurant_id === restaurant.restaurant_id);
+    const selectedRestaurantsFormArray = <FormArray>this.formGroup.controls.eventRestaurantIds;
+    const i = selectedRestaurantsFormArray.controls.findIndex(x => x.value === restaurant.restaurantId);
+    const i1 = this.restaurants.findIndex(x => x.restaurantId === restaurant.restaurantId);
     this.restaurants[i1].checked = false;
     selectedRestaurantsFormArray.removeAt(i);
   }
 
   createEvent() {
-    if (this.formGroup.valid) {
       this.eventsService.createEvent(this.formGroup.value)
       .subscribe(data => {
-        if (data.status === 201) {
-          this.toastr.success(data.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
+        if (data.obj_response.status === 201) {
+          this.toastr.success(data.obj_response.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
           this.router.navigate(['/manager/events']);
         }
       }
     );
-    }
   }
 
   isFieldValid(field: string) {
@@ -217,8 +248,8 @@ export class NewEventComponent implements OnInit {
   }
 
   isDynmaicFieldValid(field: string, i: number) {
-    return !this.formGroup.get('attendees').get(i.toString()).get(field).valid
-    && this.formGroup.get('attendees').get(i.toString()).get(field).touched;
+    return !this.formGroup.get('users').get(i.toString()).get(field).valid
+    && this.formGroup.get('users').get(i.toString()).get(field).touched;
   }
 
   displayDynamicFieldCss(field: string, i: number) {

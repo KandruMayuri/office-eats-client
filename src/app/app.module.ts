@@ -13,7 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizeGuard } from './shared/guards/authorize.guard';
 
-import { baseURL } from './shared/constants/base-url';
+import { baseURL, baseURLNew } from './shared/constants/base-url';
 
 import { StorageService } from './shared/services/storage.service';
 
@@ -39,7 +39,8 @@ import { StorageService } from './shared/services/storage.service';
   providers: [
     AuthorizeGuard,
     StorageService,
-    { provide: 'BaseURL', useValue: baseURL }
+    { provide: 'BaseURL', useValue: baseURL },
+    { provide: 'BaseURLNew', useValue: baseURLNew }
   ],
   bootstrap: [AppComponent]
 })

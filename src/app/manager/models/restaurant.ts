@@ -1,11 +1,25 @@
+import { CommonResponse } from '../../shared/models/user';
+
 export class Restaurant {
-    restaurant_id: number;
-    restaurant_name: string;
+    restaurantId: number;
+    restaurantName: string;
+    restaurantEmail: string;
+    restaurantPhone1: number;
+    restaurantTextPhoneNumber: number;
+    restaurantCountry: string;
+    restaurantState: string;
+    restaurantCity: string;
+    restaurantStreet1: string;
+    restaurantStreet2: string;
+    restaurantZipCode: number;
+    restaurantOpenDays: string;
+    restaurantOpenTime: string;
+    restaurantCloseTime: string;
+    restaurantLogo: string;
     checked: boolean;
 }
 
 export class GetRestaurantsResponse {
-    status: number;
-    message: string;
-    restaurants_details: Restaurant[];
+    obj_response: CommonResponse;
+    result: Restaurant[];
 }

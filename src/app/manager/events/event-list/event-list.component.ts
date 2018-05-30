@@ -4,8 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { EventsService } from '../events.service';
-import { EventInfo } from '../models/event';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Event } from '../models/event';
 
 @Component({
   selector: 'app-event-list',
@@ -14,7 +13,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   providers: [ConfirmationService]
 })
 export class EventListComponent implements OnInit {
-  public events: EventInfo[];
+  public events: Event[];
   public isNoEvents: boolean;
 
   constructor(
@@ -33,13 +32,8 @@ export class EventListComponent implements OnInit {
 
   getEvents() {
     this.eventsService.getEvents().subscribe(data => {
-      if (data.status === 200) {
-        this.events = data.events_list_details;
-        if (this.events.length) {
-          this.isNoEvents = false;
-        } else {
-          this.isNoEvents = true;
-        }
+      if (data.obj_response.status === 200) {
+        this.events = data.result;
       }
     });
   }
@@ -48,14 +42,14 @@ export class EventListComponent implements OnInit {
     this.router.navigate(['/manager/events/new']);
   }
 
-  removeEvent(event: EventInfo) {
+  removeEvent(event: Event) {
     this.confirmationService.confirm({
       message: 'Are you sure that you want to delete this event?',
       accept: () => {
-         this.eventsService.deleteEvent(event.event_id).subscribe(data => {
-          if (data.status === 200) {
+         this.eventsService.deleteEvent(event.eventId).subscribe(data => {
+          if (data.obj_response.status === 201) {
             this.getEvents();
-            this.toastr.success(data.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
+            this.toastr.success(data.obj_response.message, 'Success!', { dismiss: 'controlled', showCloseButton: true, toastLife: 4000 });
           }
          });
       }
