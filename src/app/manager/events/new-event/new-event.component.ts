@@ -112,7 +112,7 @@ export class NewEventComponent implements OnInit {
       eventUsersCount.clearValidators();
       this.addAttendee();
 
-    } else {
+    } else if (eventOrderType === 1) {
       this.eventOrderType = 1;
       eventUsersCount.setValidators(Validators.required);
 
@@ -122,6 +122,8 @@ export class NewEventComponent implements OnInit {
         for (let i = 0; i < control.length; i++) {
             control.removeAt(i);
         }
+    } else {
+      this.eventOrderType = null;
     }
 
     budget.updateValueAndValidity();

@@ -56,6 +56,13 @@ hr {
     padding-top: 7px;
 }
 
+/*--- Custom classes---*/
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /*--text-colors--*/
 .text-brand {
     color: $brand-color;

@@ -14,6 +14,9 @@ const routes: Routes = [
       },
       {
         path: 'new', loadChildren: './new-event/new-event.module#NewEventModule'
+      },
+      {
+        path: 'view/:id', loadChildren: './view-event/view-event.module#ViewEventModule'
       }
     ]
   },

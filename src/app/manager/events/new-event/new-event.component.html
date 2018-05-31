@@ -183,7 +183,7 @@
       <div class="row">
         <div class="col-md-12 mb-20">
           <h4 class="mb0 mt0">Restaurants
-            <small>(Select atleast 1 restaurant and maximum of 3 restaurants.)</small>
+            <small *ngIf="eventOrderType == 0">(Select atleast 1 restaurant and maximum of 3 restaurants.)</small>            
           </h4>
           <hr>
           <div class="row">
@@ -194,18 +194,19 @@
               </div>
             </div>
           </div>
+          <p *ngIf="!restaurants">Cannot find restaurants for your corporate..</p>
           <ngx-carousel [inputs]="carouselTile">
             <ngx-tile NgxCarouselItem *ngFor="let restaurant of restaurants; let i = index;">
               <div class="card">
                 <div class="image">
                   <img src="https://res.cloudinary.com/grubhub/image/upload/w_264,h_178,f_auto,q_auto,dpr_auto,g_auto,c_fill,e_improve/jrustzqv7q05qkj9gdaa"
                     class="img-responsive w-100-p" alt="{{restaurant.restaurantEmail}}">
-                  <div class="checkbox-fixed">
+                  <div class="checkbox-fixed" *ngIf="eventOrderType == 0">
                     <input type="checkbox" [checked]="restaurant.checked" (change)="onRestaurantSelect(restaurant)">
                   </div>
                 </div>
                 <div class="card-body">
-                  <h5 class="mt-0">{{restaurant.restaurantName}}</h5>
+                  <h5 class="mt-0 text-ellipsis">{{restaurant.restaurantName}}</h5>
                   <div class="rating">
                     <span class="fa fa-star text-orange"></span>
                     <span class="fa fa-star text-orange"></span>
@@ -214,6 +215,8 @@
                     <span class="fa fa-star"></span>
                   </div>
                   <small class="text-muted">Asian</small>
+                  <small class="pull-right"><a href="javascript:;" *ngIf="eventOrderType == 1">view Menu</a></small>
+                  <div class="clearfix"></div>
                 </div>
               </div>
             </ngx-tile>

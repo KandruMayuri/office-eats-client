@@ -21,6 +21,7 @@ export class ManagerService {
 
   private getManagerDetailsUrl = baseURL + 'Users/detail/';
   private getManagerCorporateResturantsUrl = baseURLNew + 'Corporates/restaurantview/';
+  private getRestaurantMenuUrl = baseURLNew + 'restaurants/menu/list/';
 
   set manager(manager: ManagerDetails) {
     this.managerDetails = manager;
@@ -41,7 +42,6 @@ export class ManagerService {
   }
 
   getManagerCorporateResturants() {
-
     return this.httpClient
       .post <GetRestaurantsResponse>(
         this.getManagerCorporateResturantsUrl + this.manager.corporate_id,
@@ -52,6 +52,16 @@ export class ManagerService {
       }).catch(error => this.handleError(error));
   }
 
+  getRestaurantMenu(restaurantId: number) {
+    return this.httpClient
+      .post <GetRestaurantsResponse>(
+        this.getRestaurantMenuUrl + restaurantId,
+        {}
+      )
+      .map(res => {
+        return res;
+      }).catch(error => this.handleError(error));
+  }
 
   public handleError(error: Response | any) {
     let errMsg: string;
