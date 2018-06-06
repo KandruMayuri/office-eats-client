@@ -21,6 +21,7 @@ export class RestaurantMenuComponent implements OnInit {
 
   selectItem (restaurantMenuId: number) {
     this.bsModalRef.hide();
+    this.bsModalService.setDismissReason(restaurantMenuId.toString());
   }
 
 }

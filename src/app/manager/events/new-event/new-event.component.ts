@@ -91,8 +91,8 @@ export class NewEventComponent implements OnInit {
       eventUsersCount: new FormControl(''),
       eventUsers: new FormControl(this.managerEmail),
       users: new FormArray([this.createAttende(this.managerEmail)]),
-      eventRestaurantIds: new FormArray([], Validators.required),
-      restaurantMenuId: new FormControl('1')
+      eventRestaurantIds: new FormArray([]),
+      restaurantMenuId: new FormControl('')
     });
 
     this.managerService.getManagerCorporateResturants().subscribe(data => {
@@ -118,20 +118,25 @@ export class NewEventComponent implements OnInit {
     const budget = this.formGroup.get('eventBudget');
     const eventUsers = this.formGroup.get('eventUsers');
     const eventUsersCount = this.formGroup.get('eventUsersCount');
+    const eventRestaurantIds = this.formGroup.get('eventRestaurantIds');
+    const restaurantMenuId = this.formGroup.get('restaurantMenuId');
     if (eventOrderType === 0) { // Individual order
       this.eventOrderType = 0;
       budget.setValidators(Validators.required);
       eventUsers.setValidators(Validators.required);
+      eventRestaurantIds.setValidators(Validators.required);
       // clear validators
       eventUsersCount.clearValidators();
+      restaurantMenuId.clearValidators();
       this.addAttendee();
 
     } else if (eventOrderType === 1) {
       this.eventOrderType = 1;
       eventUsersCount.setValidators(Validators.required);
-
+      restaurantMenuId.setValidators(Validators.required);
       budget.clearValidators();
       eventUsers.clearValidators();
+      eventRestaurantIds.clearValidators();
       const control = <FormArray>this.formGroup.controls['users'];
         for (let i = 0; i < control.length; i++) {
             control.removeAt(i);
@@ -143,6 +148,8 @@ export class NewEventComponent implements OnInit {
     budget.updateValueAndValidity();
     eventUsers.updateValueAndValidity();
     eventUsersCount.updateValueAndValidity();
+    eventRestaurantIds.updateValueAndValidity();
+    restaurantMenuId.updateValueAndValidity();
   }
 
   onChangeBudget() {
@@ -251,13 +258,6 @@ export class NewEventComponent implements OnInit {
           this.modalService.onHide
         ).subscribe(() => this.changeDetection.markForCheck());
 
-        this.subscriptions.push(
-          this.modalService.onHide.subscribe((reason: string) => {
-            const _reason = reason ? `, dismissed by ${reason}` : '';
-            console.log(_reason);
-          })
-        );
-
         this.subscriptions.push(_combine);
 
         const initialState = {
@@ -266,6 +266,15 @@ export class NewEventComponent implements OnInit {
         };
         this.bsModalRef = this.modalService.show(RestaurantMenuComponent, {initialState, class: 'modal-lg'});
         this.bsModalRef.content.closeBtnName = 'Close';
+
+        this.subscriptions.push(
+          this.modalService.onHide.subscribe((restaurantMenuId: number) => {
+            this.formGroup.patchValue({
+              restaurantMenuId: restaurantMenuId
+            });
+          })
+        );
+
       }
     }, error => {
 
