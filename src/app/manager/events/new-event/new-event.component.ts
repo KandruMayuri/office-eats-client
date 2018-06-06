@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
@@ -7,6 +7,16 @@ import { NgxCarousel } from 'ngx-carousel';
 import { EventsService } from '../events.service';
 import { ManagerService } from '../../manager.service';
 import { Restaurant } from '../../models/restaurant';
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { RestaurantMenuComponent } from './restaurant-menu/restaurant-menu.component';
+
+
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/observable/combineLatest';
 
 @Component({
   selector: 'app-new-event',
@@ -22,6 +32,8 @@ export class NewEventComponent implements OnInit {
   public carouselTile: NgxCarousel;
   managerEmail: string;
   eventOrderType: number;
+  bsModalRef: BsModalRef;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -29,7 +41,9 @@ export class NewEventComponent implements OnInit {
     private titleService: Title,
     private eventsService: EventsService,
     private managerService: ManagerService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private modalService: BsModalService,
+    private changeDetection: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.titleService.setTitle('New Event | Office Eats');
@@ -228,6 +242,37 @@ export class NewEventComponent implements OnInit {
     selectedRestaurantsFormArray.removeAt(i);
   }
 
+  // view menu
+  viewMenu(restaurant: Restaurant) {
+
+    this.eventsService.getRestaurantMenus(restaurant.restaurantId).subscribe(data => {
+      if (data.obj_response.status === 201) {
+        const _combine = Observable.combineLatest(
+          this.modalService.onHide
+        ).subscribe(() => this.changeDetection.markForCheck());
+
+        this.subscriptions.push(
+          this.modalService.onHide.subscribe((reason: string) => {
+            const _reason = reason ? `, dismissed by ${reason}` : '';
+            console.log(_reason);
+          })
+        );
+
+        this.subscriptions.push(_combine);
+
+        const initialState = {
+          list: data.result,
+          title: 'Restaurant Menu'
+        };
+        this.bsModalRef = this.modalService.show(RestaurantMenuComponent, {initialState, class: 'modal-lg'});
+        this.bsModalRef.content.closeBtnName = 'Close';
+      }
+    }, error => {
+
+    });
+
+  }
+
   createEvent() {
       this.eventsService.createEvent(this.formGroup.value)
       .subscribe(data => {
@@ -258,5 +303,12 @@ export class NewEventComponent implements OnInit {
     return {
       'has-error': this.isDynmaicFieldValid(field, i)
     };
+  }
+
+  unsubscribe() {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
+    this.subscriptions = [];
   }
 }

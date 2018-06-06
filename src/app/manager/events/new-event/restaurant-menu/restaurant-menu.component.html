@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{title}}</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+
+  <div class="table-responsive" *ngIf="list.length">
+    <table class="table">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Price</td>
+          <td></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let menu of list">
+          <td>{{menu.restaurantMenuName}}</td>
+          <td>{{menu.restaurantMenuPrice | currency}}</td>
+          <td><button class="btn btn-xs btn-primary" (click)="selectItem(menu.restaurantMenuId)">Select Item</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
+</div>

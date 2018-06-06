@@ -23,3 +23,17 @@ export class GetRestaurantsResponse {
     obj_response: CommonResponse;
     result: Restaurant[];
 }
+
+export class RestaurantMenu {
+    restaurantMenuTypeId: number;
+    restaurantMenuTypeName: string;
+    restaurantMenuName: string;
+    restaurantMenuPrice: number;
+    restaurantMenuDescription: string;
+    restaurantMenuOrderType: number;
+}
+
+export class GetRestaurantMenusResponse {
+    obj_response: CommonResponse;
+    result: RestaurantMenu[];
+}

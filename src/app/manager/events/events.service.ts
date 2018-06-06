@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import { baseURLNew } from '../../shared/constants/base-url';
 import { ObjResponse } from '../../shared/models/user';
 import { Event, EventListResponse } from './models/event';
+import { GetRestaurantMenusResponse } from '../models/restaurant';
 
 @Injectable()
 export class EventsService {
@@ -14,6 +15,7 @@ export class EventsService {
   private createEventUrl =  baseURLNew + 'events/create';
   private getEventsUrl = baseURLNew + 'events/index/';
   private deleteEventUrl = baseURLNew + '/events/delete';
+  private getRestaurantMenusUrl = baseURLNew + '/restaurants/menu/list/';
 
   createEvent(event: Event) {
     return this.httpClient
@@ -44,6 +46,17 @@ export class EventsService {
       {
         eventIDs: [eventId]
       },
+    )
+    .map(res => {
+      return res;
+    });
+  }
+
+  getRestaurantMenus(restaurantId: number) {
+    return this.httpClient
+    .post<GetRestaurantMenusResponse>(
+      this.getRestaurantMenusUrl + restaurantId,
+      {},
     )
     .map(res => {
       return res;

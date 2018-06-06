@@ -20,6 +20,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     RadioButtonModule,
     CalendarModule,
     SelectButtonModule,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    ModalModule
   ],
   declarations: [NewEventComponent],
   providers: [
