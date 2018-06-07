@@ -10,7 +10,7 @@ const routes: Routes = [
         path: '', redirectTo: 'restaurants', pathMatch: 'full'
       },
       {
-        path: 'restaurants', loadChildren: './restaurants/restaurants.module#RestaurantsModule'
+        path: 'restaurants/:id', loadChildren: './restaurants/restaurants.module#RestaurantsModule'
       },
       {
         path: 'restaurant/:id', loadChildren: './restaurants/view-restaurant/view-restaurant.module#ViewRestaurantModule'

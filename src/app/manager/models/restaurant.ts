@@ -35,5 +35,16 @@ export class RestaurantMenu {
 
 export class GetRestaurantMenusResponse {
     obj_response: CommonResponse;
-    result: RestaurantMenu[];
+    result: RestaurantMenu [];
+}
+
+export class GetEventRestaurants  {
+  obj_response: CommonResponse;
+  result: Result;
+}
+
+export class Result {
+  eventBudget: number;
+  eventId: number;
+  Restaurant: Restaurant[];
 }

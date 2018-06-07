@@ -5,7 +5,7 @@
         <h2 class="mt-0 mb-0">Menu</h2>
       </div>
       <div class="media-body media-middle">
-        
+
       </div>
     </div>
   </div>
@@ -14,61 +14,15 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <h3 class="mt-0 mb-20">Veg Starters</h3>
-    <img src="https://assets-in.foodpanda.in/dynamic/production/in/images/menucategories/2290243_menu.png" class="img-responsive w-100-p mb-10">
-    <div class="row">
+    <div class="row" *ngFor="let restaurantMenu of restaurantMenus">
       <div class="col-md-8">
-        <h4 class="mt-0">Veg. Manchurian</h4>
-        <p class="text-muted mb-0">Deep-fried mixed vegetable balls sautéed with ginger-garlic paste, chilli sauce and chopped vegetables</p>
+        <h4 class="mt-0">{{restaurantMenu.restaurantMenuName}}</h4>
+        <p class="text-muted mb-0">{{restaurantMenu.restaurantMenuDescription}}</p>
       </div>
       <div class="col-md-4">
         <div class="pull-right">
-          <p class="text-success"><b>$5.00</b></p>
-          <button class="btn btn-brand">Add to cart</button>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-8">
-        <h4 class="mt-0">Chilli Aloo</h4>
-        <p class="text-muted mb-0">Crispy deep-fried potato fingers, glazed with chilli sauce</p>
-      </div>
-      <div class="col-md-4">
-        <div class="pull-right">
-          <p class="text-success"><b>$3.00</b></p>
-          <button class="btn btn-brand">Add to cart</button>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    </div>
-    <hr>
-    <h3 class="mt-0 mb-20">Egg Starters</h3>
-    <img src="https://assets-in.foodpanda.in/dynamic/production/in/images/menucategories/2290244_menu.jpg" class="img-responsive w-100-p mb-10">
-    <div class="row">
-      <div class="col-md-8">
-        <h4 class="mt-0">Egg Fry</h4>
-        <p class="text-muted mb-0">Eggs marinated in cornflour, herbs and spices, deep-fried in oil</p>
-      </div>
-      <div class="col-md-4">
-        <div class="pull-right">
-          <p class="text-success"><b>$6.00</b></p>
-          <button class="btn btn-brand">Add to cart</button>
-        </div>
-        <div class="clearfix"></div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-8">
-        <h4 class="mt-0">Chilli Egg</h4>
-        <p class="text-muted mb-0">Marinated boiled egg sautéed with capsicum, chilli sauce, soy sauce and chilli flakes</p>
-      </div>
-      <div class="col-md-4">
-        <div class="pull-right">
-          <p class="text-success"><b>$8.00</b></p>
-          <button class="btn btn-brand">Add to cart</button>
+          <p class="text-success"><b>{{restaurantMenu.restaurantMenuPrice | currency}}</b></p>
+          <button class="btn btn-brand" (click)="addToCart(restaurantMenu)">Add to cart</button>
         </div>
         <div class="clearfix"></div>
       </div>

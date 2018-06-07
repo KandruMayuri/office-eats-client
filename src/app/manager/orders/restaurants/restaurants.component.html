@@ -1,8 +1,8 @@
-<div class="row mb-20">
+<div class="row mb-20" *ngFor="let restaurant of restaurants">
   <div class="col-md-12">
     <div class="restaurant">
       <div class="restaurant-name">
-        <h3 class="mt-0"><a href="#">Fearing's at the Ritz Carlton</a></h3>
+        <h3 class="mt-0"><a href="#">{{restaurant.restaurantName}}</a></h3>
       </div>
       <div class="row">
         <div class="col-md-4">
@@ -17,47 +17,15 @@
             <br> Dallas, TX 75201, USA
           </address>
           <p><b>Hours</b>: Open ⋅ Closes 2:30PM ⋅ Reopens 6:00PM</p>
-          <p><b>Phone:</b> +1 214-922-4848</p>
+          <p><b>Phone:</b> {{restaurant.restaurantPhone1}}</p>
           <div class="rating">
               <p-rating  stars="5" [cancel]="false"></p-rating>
           </div>
         </div>
         <div class="col-md-3">
-            <button class="btn btn-block btn-primary mt-80" (click)="chooseRestaurant()">Choose</button>
+            <button class="btn btn-block btn-primary mt-80" (click)="chooseRestaurant(restaurant.restaurantId)">Choose</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<div class="row mb-20">
-    <div class="col-md-12">
-      <div class="restaurant">
-        <div class="restaurant-name">
-          <h3 class="mt-0"><a href="#">Trinity Groves</a></h3>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <a href="#" class="thumbnail mb-0">
-              <img src="assets/images/restaurants/restaurant_1.jpeg" class="img-responsive" alt="Fearing's at the Ritz Carlton">
-            </a>
-          </div>
-          <div class="col-md-5">
-            <p><b>Address:</b></p>
-            <address class="mb-10">
-                3011 Gulden Ln<br>
-                Dallas, TX 75212, USA
-            </address>
-            <p><b>Hours</b>: Open ⋅ Closes 11:00PM ⋅ Reopens 11:00AM</p>
-            <p><b>Phone:</b> +1 214-922-4848</p>
-            <div class="rating">
-                <p-rating  stars="5" [cancel]="false"></p-rating>
-            </div>
-          </div>
-          <div class="col-md-3">
-              <button class="btn btn-block btn-primary mt-80" (click)="chooseRestaurant()">Choose</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>

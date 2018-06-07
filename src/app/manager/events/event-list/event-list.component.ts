@@ -53,6 +53,10 @@ export class EventListComponent implements OnInit {
           }
          });
       }
-  });
+    });
+  }
+
+  placeOrder (event: Event) {
+    this.router.navigate(['/manager/orders/restaurants', event.eventId]);
   }
 }
