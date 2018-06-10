@@ -1,20 +1,42 @@
-<form [formGroup]="signInForm" (validSubmit)="onSubmit()">
-  <h3 class="mt-0 mb-20 text-center">Sign In to Your Account</h3>
+<form [formGroup]="signInForm" (validSubmit)="onSubmit()" class="login100-form validate-form">
+  <span class="login100-form-title">
+    Sign In to Your Account
+  </span>
 
-  <div class="form-group form-group-lg">
-    <label for="email" class="control-label sr-only">Email</label>
-    <input type="email" class="form-control" name="email" id="email" formControlName="email" placeholder="Email">
+  <div class="wrap-input100 validate-input form-group">
+    <!-- <label for="email" class="control-label sr-only">Email</label> -->
+    <input type="email" class="input100 form-control" name="email" id="email" formControlName="email" placeholder="Email">
+    <span class="focus-input100"></span>
+    <span class="symbol-input100">
+      <i class="fa fa-envelope" aria-hidden="true"></i>
+    </span>
   </div>
-  <div class="form-group form-group-lg">
-    <label for="password" class="control-label sr-only">Password</label>
-    <input type="password" class="form-control" name="password" id="password" formControlName="password" placeholder="Password">
+  <div class="wrap-input100 validate-input form-group">
+    <!-- <label for="password" class="control-label sr-only">Password</label> -->
+      <input type="password" class="input100 form-control" name="password" id="password" formControlName="password" placeholder="Password">
+      <span class="focus-input100"></span>
+      <span class="symbol-input100">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+      </span>
   </div>
-  <div class="form-group">
-    <button class="btn btn-brand btn-lg btn-block" type="submit">Sign In</button>
+
+  <div class="container-login100-form-btn">
+	  <button class="login100-form-btn" type="submit">Sign In</button>
   </div>
-  <a routerLink='/auth/forgot-password' class="d-block text-center mb-20">Forgot Your Password?</a>
-  <p class="text-center mb-0">
-    Don't have an account yet?
-    <a routerLink='/auth/sign-up'>Sign Up</a>
-  </p>
+  <!-- <div class="form-group">
+    <button class="login100-form-btn" type="submit">Sign In</button>
+  </div> -->
+  <div class="text-center p-t-12">
+    <span class="txt1">Forgot</span>
+      <a class="txt2" routerLink="/auth/forgot-password">
+        Username / Password?
+      </a>
+  </div>
+
+  <div class="text-center p-t-136">
+    <a class="txt2" routerLink="/auth/sign-up">
+      Create your Account
+      <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+    </a>
+  </div>
 </form>

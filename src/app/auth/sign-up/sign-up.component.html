@@ -1,51 +1,84 @@
-<form [formGroup]="signUpForm" (validSubmit)="onSignUp()">
-  <h3 class="mt-0 text-center">Create Account</h3>
+<form [formGroup]="signUpForm" (validSubmit)="onSignUp()" class="login100-form validate-form">
+ <span class="login100-form-title">
+						Create Account
+					</span>
 
-  <div class="form-group form-group-lg">
-    <label for="first_name" class="control-label sr-only">First Name</label>
-    <input type="text" class="form-control" name="first_name" id="first_name" formControlName="first_name" placeholder="First Name">
+  <div class="wrap-input100 validate-input form-group">
+    <!-- <label for="first_name" class="control-label sr-only">First Name</label> -->
+    <input type="text"class="input100 form-control" name="first_name" id="first_name" formControlName="first_name" placeholder="First Name">
+    <span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</span>
   </div>
-  <div class="form-group form-group-lg">
-    <label for="last_name" class="control-label sr-only">Last Name</label>
-    <input type="text" class="form-control" name="last_name" id="last_name" formControlName="last_name" placeholder="Last Name">
+  <div class="wrap-input100 validate-input form-group">
+    <!-- <label for="last_name" class="control-label sr-only">Last Name</label> -->
+    <input type="text"class="input100 form-control" name="last_name" id="last_name" formControlName="last_name" placeholder="Last Name">
+    <span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</span>
   </div>
-  <div class="form-group form-group-lg">
+  <div class="wrap-input100 validate-input form-group">
     <label for="gender" class="control-label sr-only">Gender</label>
-    <select class="form-control" name="" id="" formControlName="gender">
+    <select class="form-control input100" name="" id="" formControlName="gender">
       <option value="">Select Gender</option>
       <option value="male">Male</option>
       <option value="female">Female</option>
     </select>
   </div>
-  <div class="form-group form-group-lg">
+  <div class="wrap-input100 validate-input form-group">
     <label for="email" class="control-label sr-only">Email</label>
-    <input type="email" class="form-control" name="email" id="email" formControlName="email" placeholder="Email">
+    <input type="email" class="form-control input100" name="email" id="email" formControlName="email" placeholder="Email">
+    <span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-envelope" aria-hidden="true"></i>
+						</span>
   </div>
-  <div class="form-group form-group-lg">
+  <div  class="wrap-input100 validate-input form-group">
     <label for="corporate_id" class="control-label sr-only">Company</label>
-    <select class="form-control" name="corporate_id" id="corporate_id" formControlName="corporate_id">
+    <select class="form-control input100" name="corporate_id" id="corporate_id" formControlName="corporate_id">
       <option value="">Select Company</option>
       <option *ngFor="let corporate of corporates" [ngValue]="corporate.corporate_id"> {{corporate.corporate_name}} </option>
     </select>
   </div>
-  <div class="form-group form-group-lg">
-    <label for="phone" class="control-label sr-only">Phone</label>
-    <input type="text" class="form-control" name="phone" id="phone" formControlName="phone" placeholder="Phone">
+  <div  class="wrap-input100 validate-input form-group">
+    <!-- <label for="phone" class="control-label sr-only">Phone</label> -->
+    <input type="text" class="form-control input100" name="phone" id="phone" formControlName="phone" placeholder="Phone">
+    <span class="focus-input100 input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-phone" aria-hidden="true"></i>
+						</span>
   </div>
-  <div class="form-group form-group-lg">
+  <div  class="wrap-input100 validate-input form-group">
     <label for="password" class="control-label sr-only">Password</label>
-    <input type="password" class="form-control" name="password" id="password" formControlName="password" placeholder="Password (min. 6 Charcters)">
+    <input type="password" class="form-control input100" name="password" id="password" formControlName="password" placeholder="Password (min. 6 Charcters)">
+    <span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
   </div>
-  <div class="form-group">
-    <button class="btn btn-brand btn-lg btn-block" type="submit">Sign Up</button>
-  </div>
-  <p class="text-center">
-    <small>By continuing, you agree to the
-      <a href="javascript:;">Terms of Service.</a>
-    </small>
-  </p>
-  <p class="text-center mb-0">
-    Already have an account?
-    <a routerLink='/auth/sign-in'>Sign In</a>
-  </p>
+  <div class="container-login100-form-btn">
+						<button type="submit" class="login100-form-btn">
+							Sign Up
+						</button>
+					</div>
+
+					<div class="text-center p-t-12">
+						<span class="txt1">
+							By continuing, you agree to the
+						</span>
+						<a class="txt2" href="#">
+							Terms of Service.
+						</a>
+					</div>
+					
+					<div class="text-center p-t-12">
+						<span class="txt1">
+							Already have an account?
+						</span>
+						<a class="txt2" routerLink="/auth/sign-in">
+							Sign In
+						</a>
+					</div>
 </form>
